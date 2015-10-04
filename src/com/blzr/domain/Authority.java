@@ -2,13 +2,13 @@ package com.blzr.domain;
 
 public class Authority {
     private Long id;
-    private Long idUser;
+    private User user;
     private Role role;
     private String site;
 
-    public Authority(Long id, Long idUser, Role role, String site) {
+    public Authority(Long id, User user, Role role, String site) {
         this.id = id;
-        this.idUser = idUser;
+        this.user = user;
         this.role = role;
         this.site = site;
     }
@@ -21,12 +21,12 @@ public class Authority {
         this.id = id;
     }
 
-    public Long getIdUser() {
-        return idUser;
+    public User getUser() {
+        return user;
     }
 
-    public void setIdUser(Long idUser) {
-        this.idUser = idUser;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Role getRole() {

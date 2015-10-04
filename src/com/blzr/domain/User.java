@@ -58,7 +58,7 @@ public class User {
         this.salt = salt;
     }
 
-    private boolean validatePassword(String password) {
+    public boolean validatePassword(String password) {
         return MessageDigest.isEqual(generateHash(password, this.salt), this.getHash());
     }
 
