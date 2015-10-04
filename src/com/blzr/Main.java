@@ -1,10 +1,13 @@
 package com.blzr;
 
+import com.blzr.service.AccountingService;
+import com.blzr.service.ValidationService;
 import org.apache.commons.cli.*;
 
 public class Main {
     private final Options options;
     private final ValidationService validationService = new ValidationService();
+    private final AccountingService accountingService = new AccountingService();
 
     public static void main(String[] args) {
         ResultType result = new Main().parseArgs(args);
@@ -31,10 +34,22 @@ public class Main {
                 printHelp();
                 return ResultType.SUCCESS;
             } else {
-                return aaa(cmd.getOptionValue("u"), cmd.getOptionValue("p"),
-                        cmd.getOptionValue("s"), cmd.getOptionValue("r"));
+                ResultType result = aaa(
+                        cmd.getOptionValue("u"),
+                        cmd.getOptionValue("p"),
+                        cmd.getOptionValue("s"),
+                        cmd.getOptionValue("r"));
+                accountingService.addActivity(
+                        validationService.getAuthority(
+                                cmd.getOptionValue("u"),
+                                cmd.getOptionValue("s"),
+                                cmd.getOptionValue("r")),
+                        cmd.getOptionValue("ds"),
+                        cmd.getOptionValue("de"),
+                        cmd.getOptionValue("v"));
+                return result;
             }
-        } catch (ParseException e) {
+        } catch (Exception e) {
             printHelp();
             return ResultType.SUCCESS;
         }

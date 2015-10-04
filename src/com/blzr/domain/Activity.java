@@ -4,14 +4,14 @@ import java.util.Date;
 
 public class Activity {
     private Long id;
-    private Long idAuthority;
+    private Authority authority;
     private Date loginDate;
     private Date logoutDate;
     private Long volume;
 
-    public Activity(Long id, Long idAuthority, Date loginDate, Date logoutDate, Long volume) {
+    public Activity(Long id, Authority authority, Date loginDate, Date logoutDate, Long volume) {
         this.id = id;
-        this.idAuthority = idAuthority;
+        this.authority = authority;
         this.loginDate = loginDate;
         this.logoutDate = logoutDate;
         this.volume = volume;
@@ -25,12 +25,12 @@ public class Activity {
         this.id = id;
     }
 
-    public Long getIdAuthority() {
-        return idAuthority;
+    public Authority getAuthority() {
+        return authority;
     }
 
-    public void setIdAuthority(Long idAuthority) {
-        this.idAuthority = idAuthority;
+    public void setAuthority(Authority authority) {
+        this.authority = authority;
     }
 
     public Date getLoginDate() {

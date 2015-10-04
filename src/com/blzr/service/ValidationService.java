@@ -1,4 +1,4 @@
-package com.blzr;
+package com.blzr.service;
 
 import com.blzr.domain.Authority;
 import com.blzr.domain.Role;
@@ -36,20 +36,24 @@ public class ValidationService {
         return getUser(username).validatePassword(password);
     }
 
-    public boolean isAuthorized(String username, String site, String role) {
+    public Authority getAuthority(String username, String site, String role) {
         User user = getUser(username);
         Role r = Role.getRole(role);
         if (r == null) {
-            return false;
+            return null;
         }
 
         for (Authority a : authorities) {
             if (a.getUser() == user && a.getRole() == r) {
                 if (site.startsWith(a.getSite())) {
-                    return true;
+                    return a;
                 }
             }
         }
-        return false;
+        return null;
+    }
+
+    public boolean isAuthorized(String username, String site, String role) {
+        return getAuthority(username, site, role) != null;
     }
 }
