@@ -7,16 +7,17 @@ import com.blzr.domain.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValidationService {
+public class AuthorizationService {
+    // Temporary storage
     private static List<User> users = new ArrayList<User>() {{
         add(new User(1L, "John Doe", "jdoe", "sup3rpaZZ"));
         add(new User(2L, "Jane Row", "jrow", "Qweqrty12"));
     }};
 
     private static List<Authority> authorities = new ArrayList<Authority>() {{
-        add(new Authority(1L, users.get(1), Role.READ, "a"));
-        add(new Authority(2L, users.get(1), Role.WRITE, "a.b"));
-        add(new Authority(3L, users.get(2), Role.EXECUTE, "a.b.c"));
+        add(new Authority(1L, users.get(0), Role.READ, "a"));
+        add(new Authority(2L, users.get(0), Role.WRITE, "a.b"));
+        add(new Authority(3L, users.get(1), Role.EXECUTE, "a.b.c"));
     }};
 
     public User getUser(String user) {
@@ -30,6 +31,10 @@ public class ValidationService {
 
     public boolean isUserExist(String username) {
         return getUser(username) != null;
+    }
+
+    public boolean isRoleExist(String role) {
+        return Role.getRole(role) != null;
     }
 
     public boolean isPasswordCorrect(String username, String password) {

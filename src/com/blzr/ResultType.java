@@ -4,7 +4,9 @@ public enum ResultType {
     SUCCESS(0),
     UNKNOWN_LOGIN(1),
     INVALID_PASSWORD(2),
-    ACCESS_DENIED(3);
+    UNKNOWN_ROLE(3),
+    ACCESS_DENIED(4),
+    INVALID_ACTIVITY(5);
 
     private final int code;
 
