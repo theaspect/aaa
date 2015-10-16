@@ -16,13 +16,13 @@ public class Main {
 
     private Main() {
         options = new Options()
-                .addOption("u", true, "username*")
-                .addOption("p", true, "password*")
-                .addOption("s", true, "site")
-                .addOption("r", true, "role")
+                .addOption("login", true, "username")
+                .addOption("pass", true, "password")
+                .addOption("res", true, "site")
+                .addOption("role", true, "role")
                 .addOption("ds", true, "date start yyyy-mm-dd")
                 .addOption("de", true, "date end yyyy-mm-dd")
-                .addOption("v", true, "volume")
+                .addOption("vol", true, "volume")
                 .addOption("h", false, "help");
     }
 
@@ -36,27 +36,27 @@ public class Main {
             } else {
                 ResultType result;
                 // First step: Authentication
-                if (cmd.hasOption("u") && cmd.hasOption("p")) {
-                    result = authenticate(cmd.getOptionValue("u"), cmd.getOptionValue("p"));
+                if (cmd.hasOption("login") && cmd.hasOption("pass")) {
+                    result = authenticate(cmd.getOptionValue("login"), cmd.getOptionValue("pass"));
 
                     // Second step: Authorization
-                    if (result == ResultType.SUCCESS && cmd.hasOption("s") && cmd.hasOption("r")) {
-                        result = authorize(cmd.getOptionValue("u"), cmd.getOptionValue("s"), cmd.getOptionValue("r"));
+                    if (result == ResultType.SUCCESS && cmd.hasOption("res") && cmd.hasOption("role")) {
+                        result = authorize(cmd.getOptionValue("login"), cmd.getOptionValue("res"), cmd.getOptionValue("role"));
 
 
                         // Third step: Accounting
                         if (result == ResultType.SUCCESS &&
                                 // And all activity values specified
-                                cmd.hasOption("ds") && cmd.hasOption("de") && cmd.hasOption("v")) {
+                                cmd.hasOption("ds") && cmd.hasOption("de") && cmd.hasOption("vol")) {
                             try {
                                 accountingService.addActivity(
                                         authorizationService.getAuthority(
-                                                cmd.getOptionValue("u"),
-                                                cmd.getOptionValue("s"),
-                                                cmd.getOptionValue("r")),
+                                                cmd.getOptionValue("login"),
+                                                cmd.getOptionValue("res"),
+                                                cmd.getOptionValue("role")),
                                         cmd.getOptionValue("ds"),
                                         cmd.getOptionValue("de"),
-                                        cmd.getOptionValue("v"));
+                                        cmd.getOptionValue("vol"));
                             } catch (java.text.ParseException e) {
                                 // Cannot parse activity
                                 printHelp();

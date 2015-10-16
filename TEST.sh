@@ -15,20 +15,20 @@ test () {
     return $status
 }
 
-test "" 1
-test "-h" 1
-test "-u XXX -p XXX" 1
+test "" 0
+test "-h" 0
+test "-login XXX -pass XXX" 1
 
-#test "-u jdoe -p XXX" 2
-#test "-u jdoe -p sup3rpaZZ" 0
+test "-login jdoe -pass XXX" 2
+test "-login jdoe -pass sup3rpaZZ" 0
 
-test "-u jdoe -p sup3rpaZZ -r XXX -s XX'" 3
-test "-u jdoe -p sup3rpaZZ -r READ -s XXX" 4
-test "-u jdoe -p sup3rpaZZ -r READ -s \"a\"" 0
-test "-u jdoe -p sup3rpaZZ -r READ -s \"a.b\"" 0
+test "-login jdoe -pass sup3rpaZZ -role XXX -res XX'" 3
+test "-login jdoe -pass sup3rpaZZ -role READ -res XXX" 4
+test "-login jdoe -pass sup3rpaZZ -role READ -res \"a\"" 0
+test "-login jdoe -pass sup3rpaZZ -role READ -res \"a.b\"" 0
 
-test "-u jdoe -p sup3rpaZZ -r READ -s a -ds XXX -de XXX -v XXX" 5
-test "-u jdoe -p sup3rpaZZ -r READ -s a -ds \"2015-05-01\" -de \"2015-05-02\" -v 100" 0
+test "-login jdoe -pass sup3rpaZZ -role READ -res a -ds XXX -de XXX -vol XXX" 5
+test "-login jdoe -pass sup3rpaZZ -role READ -res a -ds \"2015-05-01\" -de \"2015-05-02\" -vol 100" 0
 
 echo
 if [[ $result -gt 0 ]]; then
