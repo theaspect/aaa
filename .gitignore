@@ -1,6 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 
 *.log
+*.db
 
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion
@@ -65,4 +66,4 @@ crashlytics-build.properties
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-
+!lib/*.jar

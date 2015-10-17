@@ -1,7 +1,9 @@
 package com.blzr;
 
 import com.blzr.service.AccountingService;
+import com.blzr.service.AuthenticationService;
 import com.blzr.service.AuthorizationService;
+import com.blzr.service.ConnectionService;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,11 +11,13 @@ import org.apache.logging.log4j.Logger;
 public class Main {
     private static final Logger log = LogManager.getLogger(Main.class);
     private final Options options;
-    private final AuthorizationService authorizationService = new AuthorizationService();
-    private final AccountingService accountingService = new AccountingService();
+    private final ConnectionService connectionService = new ConnectionService();
+    private final AuthenticationService authenticationService = new AuthenticationService();
+    private final AuthorizationService authorizationService = new AuthorizationService(connectionService, authenticationService);
+    private final AccountingService accountingService = new AccountingService(connectionService);
 
     public static void main(String[] args) {
-        ResultType result = new Main().parseArgs(args);
+        ResultType result = new Main().connect(args);
         System.exit(result.getCode());
     }
 
@@ -29,8 +33,17 @@ public class Main {
                 .addOption("h", false, "help");
     }
 
+    private ResultType connect(String[] args) {
+        try {
+            connectionService.connect();
+            return parseArgs(args);
+        } finally {
+            connectionService.disconnect();
+        }
+    }
+
     private ResultType parseArgs(String[] args) {
-        log.info("Received params {}", args);
+        log.info("Received params {}", (Object) args);
         CommandLineParser parser = new DefaultParser();
         ResultType result;
         try {
@@ -62,7 +75,7 @@ public class Main {
                             String de = cmd.getOptionValue("de");
                             String vol = cmd.getOptionValue("vol");
                             log.info("Received ds {} de {} vol {}", ds, de, vol);
-                            result = account(login, res, role, ds, de, vol);
+                            result = account(login, role, res, ds, de, vol);
                         }
                     }
                     return result;
@@ -106,17 +119,17 @@ public class Main {
             log.warn("User {} not authorized {} to {}", username, role, site);
             return ResultType.ACCESS_DENIED;
         } else {
-            log.info("User {} not authorized {} to {}", username, role, site);
+            log.info("User {} authorized {} to {}", username, role, site);
             return ResultType.SUCCESS;
         }
     }
 
-    private ResultType account(String login, String res, String role, String ds, String de, String vol) {
+    private ResultType account(String login, String role, String res, String ds, String de, String vol) {
         try {
-            accountingService.addActivity(
-                    authorizationService.getAuthority(login, res, role),
+            Long total = accountingService.addActivity(
+                    authorizationService.getAuthority(login, role, res),
                     ds, de, vol);
-            log.info("Successfully accounted {} {} {}", login, ds, de, vol);
+            log.info("Successfully accounted {} total {} activities", login, total);
             return ResultType.SUCCESS;
         } catch (java.text.ParseException e) {
             log.error("Cannot parse data {} or {}", ds, de);
