@@ -3,8 +3,11 @@ package com.blzr;
 import com.blzr.service.AccountingService;
 import com.blzr.service.AuthorizationService;
 import org.apache.commons.cli.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Main {
+    private static final Logger log = LogManager.getLogger(Main.class);
     private final Options options;
     private final AuthorizationService authorizationService = new AuthorizationService();
     private final AccountingService accountingService = new AccountingService();
@@ -27,54 +30,54 @@ public class Main {
     }
 
     private ResultType parseArgs(String[] args) {
+        log.info("Received params {}", args);
         CommandLineParser parser = new DefaultParser();
+        ResultType result;
         try {
             CommandLine cmd = parser.parse(options, args);
             if (cmd.hasOption("h")) {
+                log.info("Printing help");
                 printHelp();
-                return ResultType.SUCCESS;
+                result = ResultType.SUCCESS;
             } else {
-                ResultType result;
                 // First step: Authentication
                 if (cmd.hasOption("login") && cmd.hasOption("pass")) {
-                    result = authenticate(cmd.getOptionValue("login"), cmd.getOptionValue("pass"));
+                    String login = cmd.getOptionValue("login");
+                    String pass = cmd.getOptionValue("pass");
+                    log.info("Received login {} and pass {}", login, pass);
+                    result = authenticate(login, pass);
 
                     // Second step: Authorization
                     if (result == ResultType.SUCCESS && cmd.hasOption("res") && cmd.hasOption("role")) {
-                        result = authorize(cmd.getOptionValue("login"), cmd.getOptionValue("res"), cmd.getOptionValue("role"));
-
+                        String role = cmd.getOptionValue("role");
+                        String res = cmd.getOptionValue("res");
+                        log.info("Received res {} and role {}", role, res);
+                        result = authorize(login, role, res);
 
                         // Third step: Accounting
                         if (result == ResultType.SUCCESS &&
                                 // And all activity values specified
                                 cmd.hasOption("ds") && cmd.hasOption("de") && cmd.hasOption("vol")) {
-                            try {
-                                accountingService.addActivity(
-                                        authorizationService.getAuthority(
-                                                cmd.getOptionValue("login"),
-                                                cmd.getOptionValue("res"),
-                                                cmd.getOptionValue("role")),
-                                        cmd.getOptionValue("ds"),
-                                        cmd.getOptionValue("de"),
-                                        cmd.getOptionValue("vol"));
-                            } catch (java.text.ParseException | NumberFormatException e) {
-                                // Cannot parse activity
-                                printHelp();
-                                return ResultType.INVALID_ACTIVITY;
-                            }
+                            String ds = cmd.getOptionValue("ds");
+                            String de = cmd.getOptionValue("de");
+                            String vol = cmd.getOptionValue("vol");
+                            log.info("Received ds {} de {} vol {}", ds, de, vol);
+                            result = account(login, res, role, ds, de, vol);
                         }
                     }
                     return result;
                 } else {
-                    // No known arguments specified
+                    log.info("No Login and password specified");
                     printHelp();
-                    return ResultType.SUCCESS;
+                    result = ResultType.SUCCESS;
                 }
             }
         } catch (ParseException e) {
-            printHelp();
-            return ResultType.SUCCESS;
+            log.error("Cannot parse params", e);
+            result = ResultType.SUCCESS;
         }
+        log.info("Result {}", result);
+        return result;
     }
 
     private void printHelp() {
@@ -84,21 +87,43 @@ public class Main {
 
     private ResultType authenticate(String username, String password) {
         if (!authorizationService.isUserExist(username)) {
+            log.warn("User {} not exists", username);
             return ResultType.UNKNOWN_LOGIN;
         } else if (!authorizationService.isPasswordCorrect(username, password)) {
+            log.warn("Password {} incorrect", password);
             return ResultType.INVALID_PASSWORD;
         } else {
+            log.info("User {} authenticated with password {}", username, password);
             return ResultType.SUCCESS;
         }
     }
 
-    private ResultType authorize(String username, String site, String role) {
+    private ResultType authorize(String username, String role, String site) {
         if (!authorizationService.isRoleExist(role)) {
+            log.warn("Role {} not exist", role);
             return ResultType.UNKNOWN_ROLE;
-        } else if (!authorizationService.isAuthorized(username, site, role)) {
+        } else if (!authorizationService.isAuthorized(username, role, site)) {
+            log.warn("User {} not authorized {} to {}", username, role, site);
             return ResultType.ACCESS_DENIED;
         } else {
+            log.info("User {} not authorized {} to {}", username, role, site);
             return ResultType.SUCCESS;
+        }
+    }
+
+    private ResultType account(String login, String res, String role, String ds, String de, String vol) {
+        try {
+            accountingService.addActivity(
+                    authorizationService.getAuthority(login, res, role),
+                    ds, de, vol);
+            log.info("Successfully accounted {} {} {}", login, ds, de, vol);
+            return ResultType.SUCCESS;
+        } catch (java.text.ParseException e) {
+            log.error("Cannot parse data {} or {}", ds, de);
+            return ResultType.INVALID_ACTIVITY;
+        } catch (NumberFormatException e) {
+            log.error("Cannot parse vol {}", vol);
+            return ResultType.INVALID_ACTIVITY;
         }
     }
 }

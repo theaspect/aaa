@@ -42,7 +42,7 @@ public class AuthorizationService {
         return getUser(username).validatePassword(password);
     }
 
-    public Authority getAuthority(String username, String site, String role) {
+    public Authority getAuthority(String username, String role, String site) {
         User user = getUser(username);
         Role r = Role.getRole(role);
         if (r == null) {
@@ -59,8 +59,8 @@ public class AuthorizationService {
         return null;
     }
 
-    public boolean isAuthorized(String username, String site, String role) {
-        return getAuthority(username, site, role) != null;
+    public boolean isAuthorized(String username, String role, String site) {
+        return getAuthority(username, role, site) != null;
     }
 
     /**
