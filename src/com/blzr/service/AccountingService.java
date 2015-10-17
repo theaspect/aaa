@@ -13,7 +13,7 @@ public class AccountingService {
     private static final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     private List<Activity> activities = new LinkedList<Activity>();
 
-    public void addActivity(Authority authority, String dateStart, String dateEnd, String volume) throws ParseException {
+    public void addActivity(Authority authority, String dateStart, String dateEnd, String volume) throws ParseException, NumberFormatException {
         activities.add(new Activity((long) activities.size(), authority,
                 format.parse(dateStart), format.parse(dateEnd), Long.valueOf(volume)));
     }

@@ -57,7 +57,7 @@ public class Main {
                                         cmd.getOptionValue("ds"),
                                         cmd.getOptionValue("de"),
                                         cmd.getOptionValue("vol"));
-                            } catch (java.text.ParseException e) {
+                            } catch (java.text.ParseException | NumberFormatException e) {
                                 // Cannot parse activity
                                 printHelp();
                                 return ResultType.INVALID_ACTIVITY;
