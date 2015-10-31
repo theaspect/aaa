@@ -21,7 +21,7 @@ public class Main {
         System.exit(result.getCode());
     }
 
-    private Main() {
+    public Main() {
         options = new Options()
                 .addOption("login", true, "username")
                 .addOption("pass", true, "password")
@@ -33,7 +33,7 @@ public class Main {
                 .addOption("h", false, "help");
     }
 
-    private ResultType connect(String[] args) {
+    public ResultType connect(String[] args) {
         try {
             connectionService.connect();
             return parseArgs(args);

@@ -2,7 +2,7 @@
 
 ## Build instructions
 
-To build project execute `./BUILD.sh`
+To build project execute `mvn package`
 
 ## Run instructions
 
@@ -10,7 +10,7 @@ To run application execute `./RUN.sh`
 
 ## Test instructions
 
-To run all tests execute `./TEST.sh`
+All tests run during build
 
 ## Requirements list
 
@@ -68,3 +68,5 @@ R2.7 В репозитории должен содержаться скрипт 
 R2.8 Код должен быть отформатирован согласно требованиям java coding conventions
 
 R2.9 В репозитории должен содержаться файл .gitignore в котором будут отфильтрованы бинарные артефакты и файлы IDE
+
+TODO Update requirements
