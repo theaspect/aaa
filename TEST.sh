@@ -17,7 +17,7 @@ test () {
 
 ./BUILD.sh
 
-test "" 0
+test "" 1
 test "-h" 0
 
 test "-login XXX -pass XXX" 1
@@ -41,3 +41,5 @@ if [[ $result -gt 0 ]]; then
 else
     echo ALL TESTS PASSED
 fi
+
+exit ${result}
