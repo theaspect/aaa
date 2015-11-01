@@ -12,6 +12,10 @@ To run application execute `./RUN.sh`
 
 All tests run during build
 
+## Static analysis
+
+To generate code analysis report execute `mvn site`
+
 ## Requirements list
 
 ### Requirements 1 Revision 3
