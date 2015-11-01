@@ -65,108 +65,70 @@ public class ConnectionService {
     }
 
     public User getUserByLogin(String user) {
-        PreparedStatement pstmt = null;
-        try {
-            pstmt = connection.prepareStatement("SELECT * FROM user WHERE login = ?");
+        try (PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM user WHERE login = ?")) {
             pstmt.setString(1, user);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return new User(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getString("login"),
-                        rs.getString("password"),
-                        rs.getString("salt"));
-            } else {
-                return null;
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new User(
+                            rs.getLong("id"),
+                            rs.getString("name"),
+                            rs.getString("login"),
+                            rs.getString("password"),
+                            rs.getString("salt"));
+                } else {
+                    return null;
+                }
             }
         } catch (SQLException e) {
             log.error("Cannot execute query", e);
             throw new RuntimeException("Suppress exception", e);
-        } finally {
-            if (pstmt != null) {
-                try {
-                    pstmt.close();
-                } catch (SQLException e) {
-                    // Do nothing
-                }
-            }
         }
     }
 
     public List<Authority> getAuthoritiesByUserAndRole(User user, Role role) {
-        PreparedStatement pstmt = null;
-        try {
-            pstmt = connection.prepareStatement("SELECT * FROM authority WHERE user_id = ? and role = ?");
+        try (PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM authority WHERE user_id = ? and role = ?")) {
             pstmt.setLong(1, user.getId());
             pstmt.setString(2, role.name());
-            ResultSet rs = pstmt.executeQuery();
-            List<Authority> authorities = new LinkedList<>();
-            while (rs.next()) {
-                authorities.add(new Authority(
-                        rs.getLong("id"),
-                        user, // No need to request same user again
-                        Role.getRole(rs.getString("role")),
-                        rs.getString("site")));
+            try (ResultSet rs = pstmt.executeQuery()) {
+                List<Authority> authorities = new LinkedList<>();
+                while (rs.next()) {
+                    authorities.add(new Authority(
+                            rs.getLong("id"),
+                            user, // No need to request same user again
+                            Role.getRole(rs.getString("role")),
+                            rs.getString("site")));
+                }
+                return authorities;
             }
-            return authorities;
         } catch (SQLException e) {
             log.error("Cannot execute query", e);
             throw new RuntimeException("Suppress exception", e);
-        } finally {
-            if (pstmt != null) {
-                try {
-                    pstmt.close();
-                } catch (SQLException e) {
-                    // Do nothing
-                }
-            }
         }
     }
 
     public void addActivity(Activity activity) {
-        PreparedStatement pstmt = null;
-        try {
-            pstmt = connection.prepareStatement(
-                    "INSERT INTO activity (authority_id, login_date, logout_date, volume) VALUES (?,?,?,?)");
+        try (PreparedStatement pstmt = connection.prepareStatement(
+                "INSERT INTO activity (authority_id, login_date, logout_date, volume) VALUES (?,?,?,?)")) {
             pstmt.setLong(1, activity.getAuthority().getId());
-            pstmt.setDate(2, new java.sql.Date(activity.getLoginDate().getTime()));
-            pstmt.setDate(3, new java.sql.Date(activity.getLogoutDate().getTime()));
+            pstmt.setDate(2, new Date(activity.getLoginDate().getTime()));
+            pstmt.setDate(3, new Date(activity.getLogoutDate().getTime()));
             pstmt.setLong(4, activity.getVolume());
             pstmt.execute();
         } catch (SQLException e) {
             log.error("Cannot execute query", e);
             throw new RuntimeException("Suppress exception", e);
-        } finally {
-            if (pstmt != null) {
-                try {
-                    pstmt.close();
-                } catch (SQLException e) {
-                    // Do nothing
-                }
-            }
         }
     }
 
     public Long countActivity() {
-        PreparedStatement pstmt = null;
-        try {
-            pstmt = connection.prepareStatement(
-                    "SELECT COUNT(*) FROM activity");
-            ResultSet rs = pstmt.executeQuery();
-            rs.next(); // There is always one row
-            return rs.getLong(1);
+        try (PreparedStatement pstmt = connection.prepareStatement("SELECT COUNT(*) FROM activity")) {
+            try (ResultSet rs = pstmt.executeQuery()) {
+                rs.next(); // There is always one row
+                return rs.getLong(1);
+            }
         } catch (SQLException e) {
             log.error("Cannot execute query", e);
             throw new RuntimeException("Suppress exception", e);
-        } finally {
-            if (pstmt != null) {
-                try {
-                    pstmt.close();
-                } catch (SQLException e) {
-                    // Do nothing
-                }
-            }
         }
     }
 }

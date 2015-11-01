@@ -8,7 +8,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 public class AccountingService {
-    private static final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     private final ConnectionService connectionService;
 
     public AccountingService(ConnectionService connectionService) {
@@ -16,6 +15,7 @@ public class AccountingService {
     }
 
     public Long addActivity(Authority authority, String dateStart, String dateEnd, String volume) throws ParseException, NumberFormatException {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         connectionService.addActivity(new Activity(authority,
                 format.parse(dateStart), format.parse(dateEnd), Long.valueOf(volume)));
         return connectionService.countActivity();
