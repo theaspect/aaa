@@ -17,7 +17,7 @@ test () {
 
 ./BUILD.sh
 
-test "" 1
+test "" 0
 test "-h" 0
 
 test "-login XXX -pass XXX" 1
