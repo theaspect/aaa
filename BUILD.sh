@@ -1,11 +1,27 @@
-#!/bin/bash -v
-rm -rf "out"
-mkdir -p "out/classes"
-find . -name "*.java" | xargs javac -cp "lib/*" -d out/classes -sourcepath src -verbose
+#!/bin/bash
 
-cp -r resources/* out/classes/
+# Include config file
+source ./CONFIG.sh
 
-mkdir -p "out/lib"
-cp lib/* out/lib/
+rm -rf "$OUT"
+mkdir -p "$OUT_CLS"
 
-jar -cfe out/aaa.jar com.blzr.Main -C out/classes/ .
+if [ "$(uname)" == "Darwin" ]; then
+    echo Mac OS X platform
+    CP="$LIB"
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    echo GNU/Linux platform
+    CP="$LIB"
+elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
+    echo Windows NT platform
+    CP="$LIB"
+fi
+
+find . -name "*.java" | xargs javac -cp "$CP" -d $OUT_CLS -sourcepath $SRC -verbose
+
+cp -r $RES $OUT_CLS
+
+mkdir -p $OUT_LIB
+cp $LIB $OUT_LIB
+
+jar -cfe $OUT_JAR $MAIN -C $OUT_CLS .
