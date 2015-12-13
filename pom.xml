@@ -9,11 +9,6 @@
     <version>4.0</version>
     <packaging>war</packaging>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jetty-version>9.3.6.v20151106</jetty-version>
-    </properties>
-
     <build>
         <plugins>
             <!-- Set build version -->
@@ -67,7 +62,7 @@
                                 <requireJavaVersion>
                                     <version>[1.8,)</version>
                                     <message>[ERROR] OLD JDK [${java.version}] in use.
-                                        Jetty ${jetty-version} requires JDK 1.8 or newer</message>
+                                        Jetty requires JDK 1.8 or newer</message>
                                 </requireJavaVersion>
                             </rules>
                         </configuration>
@@ -77,7 +72,7 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>${jetty-version}</version>
+                <version>9.3.6.v20151106</version>
                 <configuration>
                     <webApp>
                         <contextPath>/</contextPath>
@@ -153,18 +148,24 @@
             <version>2.4.1</version>
         </dependency>
 
+        <!-- Google guice -->
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
             <version>4.0</version>
         </dependency>
-
         <dependency>
             <groupId>com.google.inject.extensions</groupId>
             <artifactId>guice-servlet</artifactId>
             <version>4.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-persist</artifactId>
+            <version>4.0</version>
+        </dependency>
 
+        <!-- Jetty related -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
@@ -173,24 +174,36 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-annotations</artifactId>
-            <version>${jetty-version}</version>
+            <version>9.3.6.v20151106</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>${jetty-version}</version>
+            <version>9.3.6.v20151106</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>apache-jsp</artifactId>
-            <version>${jetty-version}</version>
+            <version>9.3.6.v20151106</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>apache-jstl</artifactId>
-            <version>${jetty-version}</version>
+            <version>9.3.6.v20151106</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- Persistence -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.0.5.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>5.0.5.Final</version>
         </dependency>
 
         <dependency>
