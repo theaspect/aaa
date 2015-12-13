@@ -1,26 +1,41 @@
 package com.blzr.domain;
 
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 public class Activity {
+    @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Access(AccessType.PROPERTY)
     @ManyToOne
     private Authority authority;
 
+    @Expose
+    @Transient
+    private Long authorityId;
+
+    @Expose
     @Temporal(TemporalType.DATE)
     @Column(name = "login_date")
     private Date loginDate;
 
+    @Expose
     @Temporal(TemporalType.DATE)
     @Column(name = "logout_date")
     private Date logoutDate;
 
+    @Expose
     private Integer volume;
+
+    @Expose
+    @Version
+    private Long version;
 
     public Activity(){}
 
@@ -50,6 +65,13 @@ public class Activity {
 
     public void setAuthority(Authority authority) {
         this.authority = authority;
+        if (authority != null) {
+            this.authorityId = authority.getId();
+        }
+    }
+
+    public Long getAuthorityId() {
+        return authorityId;
     }
 
     public Date getLoginDate() {
@@ -74,5 +96,13 @@ public class Activity {
 
     public void setVolume(Integer volume) {
         this.volume = volume;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

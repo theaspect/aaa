@@ -27,7 +27,7 @@ public class AuthorizationService {
 
     public boolean isPasswordCorrect(String username, String password) {
         final User user = connectionService.getUserByLogin(username);
-        return authenticationService.validatePassword(password, user.getPassword(), user.getSalt());
+        return authenticationService.validatePassword(password, user.getHash(), user.getSalt());
     }
 
     public Authority getAuthority(String username, String role, String site) {

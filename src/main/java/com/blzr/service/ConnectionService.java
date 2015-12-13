@@ -73,7 +73,7 @@ public class ConnectionService {
                             rs.getLong("id"),
                             rs.getString("name"),
                             rs.getString("login"),
-                            rs.getString("password"),
+                            rs.getString("salt"),
                             rs.getString("salt"));
                 } else {
                     return null;

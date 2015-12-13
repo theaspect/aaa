@@ -1,32 +1,42 @@
 package com.blzr.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.google.gson.annotations.Expose;
+
+import javax.persistence.*;
 
 @Entity
 public class User {
+    @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Expose
     private String name;
 
+    @Expose
     private String login;
 
-    private String password;
+    private String hash;
 
     private String salt;
+
+    @Expose(serialize = false)
+    @Transient
+    private String password;
+
+    @Expose
+    @Version
+    private Long version;
 
     public User() {
     }
 
-    public User(Long id, String name, String login, String password, String salt) {
+    public User(Long id, String name, String login, String hash, String salt) {
         this.id = id;
         this.name = name;
         this.login = login;
-        this.password = password;
+        this.hash = hash;
         this.salt = salt;
     }
 
@@ -54,12 +64,12 @@ public class User {
         this.login = login;
     }
 
-    public String getPassword() {
-        return password;
+    public String getHash() {
+        return hash;
     }
 
-    public void setPassword(String hash) {
-        this.password = hash;
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     public String getSalt() {
@@ -68,5 +78,13 @@ public class User {
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

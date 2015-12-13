@@ -1,20 +1,34 @@
 package com.blzr.domain;
 
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 
 @Entity
 public class Authority {
+    @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
+    @Access(AccessType.PROPERTY)
     private User user;
 
+    @Expose
+    @Transient
+    private Long userId;
+
+    @Expose
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Expose
     private String site;
+
+    @Expose
+    @Version
+    private Long version;
 
     public Authority() {
     }
@@ -40,6 +54,13 @@ public class Authority {
 
     public void setUser(User user) {
         this.user = user;
+        if (user != null) {
+            userId = user.getId();
+        }
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     public Role getRole() {
@@ -56,5 +77,13 @@ public class Authority {
 
     public void setSite(String site) {
         this.site = site;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }
