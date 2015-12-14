@@ -21,4 +21,10 @@ public class AuthorityDao {
     public Authority findById(Long id) {
         return em.find(Authority.class, id);
     }
+
+    public List<Authority> findByUserId(Long userId) {
+        return em.createQuery("FROM Authority a WHERE a.user.id = :user_id", Authority.class)
+                .setParameter("user_id", userId)
+                .getResultList();
+    }
 }

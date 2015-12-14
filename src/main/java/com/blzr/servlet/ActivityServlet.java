@@ -23,10 +23,13 @@ public class ActivityServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final Long id = req.getParameter("id") == null ? null : Long.valueOf(req.getParameter("id"));
-        if (id == null) {
-            gsonProvider.get().toJson(dao.findAll(), resp.getWriter());
-        } else {
+        final Long authorityId = req.getParameter("authorityId") == null ? null : Long.valueOf(req.getParameter("authorityId"));
+        if (id != null) {
             gsonProvider.get().toJson(dao.findById(id), resp.getWriter());
+        } else if (authorityId != null) {
+            gsonProvider.get().toJson(dao.findByAuthorityId(authorityId), resp.getWriter());
+        } else {
+            gsonProvider.get().toJson(dao.findAll(), resp.getWriter());
         }
     }
 }

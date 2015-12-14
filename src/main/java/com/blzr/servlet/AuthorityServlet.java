@@ -23,10 +23,13 @@ public class AuthorityServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final Long id = req.getParameter("id") == null ? null : Long.valueOf(req.getParameter("id"));
-        if (id == null) {
-            gsonProvider.get().toJson(dao.findAll(), resp.getWriter());
-        } else {
+        final Long userId = req.getParameter("userId") == null ? null : Long.valueOf(req.getParameter("userId"));
+        if (id != null) {
             gsonProvider.get().toJson(dao.findById(id), resp.getWriter());
+        } else if (userId != null) {
+                gsonProvider.get().toJson(dao.findByUserId(userId), resp.getWriter());
+        } else {
+            gsonProvider.get().toJson(dao.findAll(), resp.getWriter());
         }
     }
 }
