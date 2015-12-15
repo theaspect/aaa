@@ -4,6 +4,7 @@ import com.blzr.domain.Authority;
 import com.blzr.domain.Role;
 import com.blzr.domain.User;
 
+@Deprecated
 public class AuthorizationService {
     private final ConnectionService connectionService;
     private final AuthenticationService authenticationService;

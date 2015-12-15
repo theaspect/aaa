@@ -13,6 +13,7 @@ import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
+@Deprecated
 public class ConnectionService {
     private static final Logger log = LogManager.getLogger(ConnectionService.class);
     private final String url = "jdbc:h2:./aaa";

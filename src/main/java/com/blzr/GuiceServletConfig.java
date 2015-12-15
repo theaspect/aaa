@@ -3,6 +3,8 @@ package com.blzr;
 import com.blzr.dao.ActivityDao;
 import com.blzr.dao.AuthorityDao;
 import com.blzr.dao.UserDao;
+import com.blzr.service.AaaService;
+import com.blzr.service.CliService;
 import com.blzr.servlet.ActivityServlet;
 import com.blzr.servlet.AuthorityServlet;
 import com.blzr.servlet.UserServlet;
@@ -37,6 +39,9 @@ public class GuiceServletConfig extends GuiceServletContextListener {
                 bind(ActivityDao.class);
                 bind(AuthorityDao.class);
                 bind(UserDao.class);
+
+                bind(AaaService.class);
+                bind(CliService.class);
 
                 serve("/ajax/activity").with(ActivityServlet.class);
                 serve("/ajax/authority").with(AuthorityServlet.class);

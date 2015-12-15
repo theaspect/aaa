@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import org.apache.logging.log4j.Logger;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.util.List;
 
 public class ActivityDao {
@@ -26,5 +27,24 @@ public class ActivityDao {
         return em.createQuery("FROM Activity a WHERE a.authority.id = :authority_id", Activity.class)
                 .setParameter("authority_id", authorityId)
                 .getResultList();
+    }
+
+    public void createActivity(Activity activity) {
+        EntityTransaction tx = null;
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+            em.persist(activity);
+            tx.commit();
+        } catch (RuntimeException e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
+        }
+    }
+
+    public Long countActivity() {
+        return em.createQuery("SELECT COUNT(*) FROM Activity", Long.class).getSingleResult();
     }
 }

@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 
+@Deprecated
 public class AuthenticationService {
     private static final Logger log = LogManager.getLogger(AuthenticationService.class);
 

@@ -7,6 +7,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+@Deprecated
 public class AccountingService {
     private final ConnectionService connectionService;
 

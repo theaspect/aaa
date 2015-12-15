@@ -21,4 +21,15 @@ public class UserDao {
     public User findById(Long id) {
         return em.find(User.class, id);
     }
+
+    public User findByName(String username) {
+        List<User> items = em.createQuery("FROM User u WHERE u.login = :name", User.class)
+                .setParameter("name", username)
+                .getResultList();
+        if (items.isEmpty()) {
+            return null;
+        } else {
+            return items.get(0);
+        }
+    }
 }
