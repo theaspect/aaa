@@ -1,4 +1,4 @@
-# Reference implementation for AAA project
+# Reference implementation for AAA project ![travis](https://travis-ci.org/theaspect/aaa.svg?branch=release-2)
 
 ## Build instructions
 
